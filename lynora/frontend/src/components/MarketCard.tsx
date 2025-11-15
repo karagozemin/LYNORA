@@ -73,40 +73,19 @@ export default function MarketCard({ market }: MarketCardProps) {
   const upPercentage = oldFormatTotal > 0 ? (upBets / oldFormatTotal) * 100 : 50
   const downPercentage = oldFormatTotal > 0 ? (downBets / oldFormatTotal) * 100 : 50
 
-  // Determine border color - each market gets a unique color based on ID
-  // Use a palette of vibrant electric colors
-  const ELECTRIC_COLORS = [
-    '#7df9ff', // Electric cyan
-    '#9333ea', // Purple
-    '#db2777', // Pink
-    '#4f46e5', // Indigo
-    '#0d9488', // Teal
-    '#ea580c', // Orange
-    '#0891b2', // Cyan
-    '#e11d48', // Rose
-    '#10b981', // Green
-    '#f59e0b', // Amber
-    '#3b82f6', // Blue
-    '#ec4899', // Fuchsia
-  ]
-
+  // Determine border color based on market status
   const getBorderColor = () => {
-    // Use market ID to get a consistent color for each market
-    const colorIndex = market.id % ELECTRIC_COLORS.length
-    let baseColor = ELECTRIC_COLORS[colorIndex]
-    
     // Adjust color based on status
-    if (!isActive) {
-      if (market.status === 'Resolved') {
-        // Resolved markets - slightly dimmer green
-        return '#10b981'
-      } else {
-        // Locked markets - slightly dimmer orange
-        return '#f59e0b'
-      }
+    if (isActive) {
+      // Active markets - green
+      return '#10b981'
+    } else if (market.status === 'Resolved') {
+      // Resolved markets - blue
+      return '#3b82f6'
+    } else {
+      // Locked markets - orange
+      return '#f59e0b'
     }
-    
-    return baseColor
   }
 
   const borderColor = getBorderColor()

@@ -10,8 +10,8 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen relative">
-        {/* DarkVeil Background */}
-        <div className="fixed inset-0 z-0" style={{ width: '100%', height: '100%', position: 'fixed' }}>
+        {/* DarkVeil Background - covers entire viewport */}
+        <div className="fixed inset-0 z-0" style={{ width: '100vw', height: '100vh' }}>
           <div style={{ width: '100%', height: '100%', position: 'relative' }}>
             <DarkVeil 
               speed={0.3}
@@ -27,7 +27,7 @@ function App() {
         </div>
         
         {/* Content overlay */}
-        <div className="relative z-10">
+        <div className="relative z-10 min-h-screen">
           <Header />
           <main className="container mx-auto px-4 py-8">
             <Routes>
