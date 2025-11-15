@@ -1,0 +1,20 @@
+{
+  "name": "lynora-massa-contract",
+  "version": "1.0.0",
+  "description": "LYNORA Prediction Market Smart Contract for Massa",
+  "type": "module",
+  "scripts": {
+    "asbuild": "asc assembly/main.ts --outFile build/main.wasm --optimize --runtime stub",
+    "build": "npm run asbuild",
+    "deploy": "node deploy.js"
+  },
+  "dependencies": {
+    "@massalabs/as-types": "^2.1.0",
+    "@massalabs/massa-as-sdk": "^3.0.2",
+    "@massalabs/massa-web3": "^5.3.0",
+    "dotenv": "^17.2.3"
+  },
+  "devDependencies": {
+    "assemblyscript": "^0.27.0"
+  }
+}

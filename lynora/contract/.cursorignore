@@ -1,0 +1,6 @@
+# Ignore AssemblyScript files from TypeScript linting
+assembly/
+build/
+node_modules/
+
+
