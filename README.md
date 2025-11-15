@@ -2,7 +2,7 @@
   <img src="Lynora-Photoroom.png" alt="LYNORA Logo" width="250" />
 </div>
 
-# LYNORA - Real-Time Prediction Markets on Massa
+# LYNORA - Real-Time Prediction Markets on Massa Chain
 
 > 🚀 Built for AKINDO x Massa Buildathon Wave 4/5
 
