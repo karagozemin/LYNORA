@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useWallet } from '../lib/wallet'
 import { shortAddress } from '../lib/massa'
+import logo from '../assets/logo.jpeg'
 
 export default function Header() {
   const { isConnected, address, connect, disconnect } = useWallet()
@@ -19,10 +20,12 @@ export default function Header() {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-8">
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-700 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">L</span>
-              </div>
+            <Link to="/" className="flex items-center space-x-3">
+              <img 
+                src={logo} 
+                alt="LYNORA Logo" 
+                className="h-12 w-auto object-contain"
+              />
               <div>
                 <span className="text-2xl font-bold text-white">LYNORA</span>
                 <p className="text-xs text-gray-400">on Massa</p>

@@ -388,18 +388,18 @@ export function resolveWithOracle(marketId: u64): void {
 - **Market Load**: ~200ms per market
 - **Bet Placement**: ~1s (including user confirmation)
 
-## Comparison: Linera vs Massa
+## Technical Stack
 
-| Feature | Linera (Old) | Massa (New) |
-|---------|-------------|-------------|
-| Smart Contracts | Rust | AssemblyScript |
-| Architecture | Microchains | Single chain + sharding |
-| Consensus | Custom | Proof of Stake |
-| Finality | Instant | ~10 seconds |
-| Frontend | Separate | DeWeb capable |
-| Autonomy | No | Yes (autonomous SC) |
-| Maturity | Early | Mainnet launched |
-| Hackathon | Linera Wave 5 | Massa Wave 4/5 |
+| Feature | Implementation |
+|---------|---------------|
+| Smart Contracts | AssemblyScript |
+| Architecture | Single chain + sharding |
+| Consensus | Proof of Stake |
+| Finality | ~10 seconds |
+| Frontend | React + Vite |
+| Autonomy | Yes (autonomous SC) |
+| Maturity | Mainnet launched |
+| Hackathon | Massa Wave 4/5 |
 
 ## Future Enhancements
 
@@ -430,7 +430,7 @@ LYNORA's architecture on Massa provides:
 - ✅ **Decentralized**: No central points of failure
 - ✅ **Modern**: AssemblyScript + React
 
-The Massa implementation offers significant advantages over the previous Linera version, particularly in maturity, autonomous contracts, and ecosystem support.
+The Massa implementation offers significant advantages, particularly in maturity, autonomous contracts, and ecosystem support.
 
 ---
 

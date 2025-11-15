@@ -23,8 +23,8 @@ All notable changes to LYNORA will be documented in this file.
 - README with quick start guide
 
 ### Technical Details
-- Linera SDK 0.12 integration
-- Microchain-per-user architecture
+- Massa blockchain integration
+- AssemblyScript smart contracts
 - Real-time GraphQL subscriptions
 - Apollo Client for frontend
 - TypeScript for type safety

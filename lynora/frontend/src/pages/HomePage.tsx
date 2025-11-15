@@ -184,10 +184,10 @@ export default function HomePage() {
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-white mb-2">
-          Real-Time Prediction Markets
+          Prediction Markets
         </h1>
         <p className="text-gray-400 text-lg">
-          Create and trade on decentralized prediction markets powered by Linera microchains
+          Create and trade on decentralized prediction markets powered by Massa blockchain
         </p>
       </div>
 

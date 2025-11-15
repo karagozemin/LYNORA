@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # LYNORA Build Script
-# Builds the Linera contract and frontend
+# Builds the Massa contract and frontend
 
 set -e
 
@@ -13,13 +13,14 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Build contract
-echo -e "${BLUE}📦 Building Rust contract...${NC}"
+echo -e "${BLUE}📦 Building AssemblyScript contract...${NC}"
 cd contract
-cargo build --release --target wasm32-unknown-unknown
+npm install
+npm run build
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}✓ Contract built successfully${NC}"
-    echo "  Location: target/wasm32-unknown-unknown/release/lynora.wasm"
+    echo "  Location: build/main.wasm"
 else
     echo "❌ Contract build failed"
     exit 1
@@ -52,9 +53,9 @@ cd ..
 echo -e "${GREEN}✓ Build complete!${NC}"
 echo ""
 echo "Next steps:"
-echo "  1. Deploy contract: cd contract && linera project publish-and-create"
+echo "  1. Deploy contract: cd contract && node deploy.js"
 echo "  2. Update frontend .env with contract address"
-echo "  3. Deploy frontend: cd frontend && npm run deploy"
+echo "  3. Start frontend: cd frontend && npm run dev"
 
 
 
