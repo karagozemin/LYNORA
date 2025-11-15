@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { formatDistanceToNow } from 'date-fns'
 import clsx from 'clsx'
 import { Market } from '../lib/contract'
+import ElectricBorder from './ElectricBorder'
 
 interface MarketCardProps {
   market: Market
@@ -72,8 +73,54 @@ export default function MarketCard({ market }: MarketCardProps) {
   const upPercentage = oldFormatTotal > 0 ? (upBets / oldFormatTotal) * 100 : 50
   const downPercentage = oldFormatTotal > 0 ? (downBets / oldFormatTotal) * 100 : 50
 
+  // Determine border color - each market gets a unique color based on ID
+  // Use a palette of vibrant electric colors
+  const ELECTRIC_COLORS = [
+    '#7df9ff', // Electric cyan
+    '#9333ea', // Purple
+    '#db2777', // Pink
+    '#4f46e5', // Indigo
+    '#0d9488', // Teal
+    '#ea580c', // Orange
+    '#0891b2', // Cyan
+    '#e11d48', // Rose
+    '#10b981', // Green
+    '#f59e0b', // Amber
+    '#3b82f6', // Blue
+    '#ec4899', // Fuchsia
+  ]
+
+  const getBorderColor = () => {
+    // Use market ID to get a consistent color for each market
+    const colorIndex = market.id % ELECTRIC_COLORS.length
+    let baseColor = ELECTRIC_COLORS[colorIndex]
+    
+    // Adjust color based on status
+    if (!isActive) {
+      if (market.status === 'Resolved') {
+        // Resolved markets - slightly dimmer green
+        return '#10b981'
+      } else {
+        // Locked markets - slightly dimmer orange
+        return '#f59e0b'
+      }
+    }
+    
+    return baseColor
+  }
+
+  const borderColor = getBorderColor()
+
   return (
-    <div className="card hover:border-primary-500 transition-all hover:shadow-lg">
+    <ElectricBorder
+      color={borderColor}
+      speed={0.3}
+      chaos={0.15}
+      thickness={1.5}
+      style={{ borderRadius: 12 }}
+      className="market-card-border"
+    >
+      <div className="card transition-all hover:shadow-lg bg-gray-800 border-0">
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <Link to={`/market/${market.id}`}>
@@ -177,7 +224,8 @@ export default function MarketCard({ market }: MarketCardProps) {
         </span>
         <span className="font-mono text-gray-500">#{market.id}</span>
       </div>
-    </div>
+      </div>
+    </ElectricBorder>
   )
 }
 
