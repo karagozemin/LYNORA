@@ -45,34 +45,37 @@ LYNORA is a decentralized prediction market platform built on Massa blockchain, 
 1. **Clone the repository**
 ```bash
 git clone <repo-url>
-cd lynora
+cd <repo-name>
 ```
 
 2. **Install contract dependencies**
 ```bash
-cd contract
+cd lynora/contract
 npm install
 ```
 
 3. **Build the smart contract**
 ```bash
+cd lynora/contract
 npm run build
 ```
 
 4. **Install frontend dependencies**
 ```bash
-cd ../frontend
+cd lynora/frontend
 npm install
 ```
 
 5. **Configure environment**
 ```bash
+cd lynora/frontend
 cp .env.example .env
 # Edit .env and add your contract address after deployment
 ```
 
 6. **Start development server**
 ```bash
+cd lynora/frontend
 npm run dev
 ```
 
@@ -86,7 +89,7 @@ npm run dev
 
 2. **Deploy contract using massa-sc-scripts**
 ```bash
-cd contract
+cd lynora/contract
 npm run deploy
 ```
 
@@ -98,7 +101,7 @@ VITE_CONTRACT_ADDRESS=AS12...your_contract_address
 ### Deploy Frontend to Massa DeWeb
 
 ```bash
-cd frontend
+cd lynora/frontend
 npm run build
 
 # Deploy to DeWeb (optional - requires Massa DeWeb CLI)
@@ -195,19 +198,18 @@ Or deploy to traditional hosting (Vercel, Netlify, etc.)
 
 ```bash
 # Run contract tests
-cd contract
+cd lynora/contract
 npm test
 
 # Run frontend tests
-cd frontend
+cd lynora/frontend
 npm test
 ```
 
 ## 📚 Documentation
 
-- [Architecture](./ARCHITECTURE.md) - Technical architecture details
-- [Deployment](./DEPLOYMENT.md) - Detailed deployment guide
-- [Demo Script](./DEMO_SCRIPT.md) - Demo walkthrough
+- [Architecture](./lynora/ARCHITECTURE.md) - Technical architecture details
+- [Changelog](./lynora/CHANGELOG.md) - Project changelog
 
 ## 🤝 Contributing
 
@@ -215,7 +217,7 @@ Contributions welcome! Please read our contributing guidelines.
 
 ## 📄 License
 
-MIT License - see [LICENSE](./LICENSE) file
+MIT License - see [LICENSE](./lynora/LICENSE) file
 
 ## 🌐 Links
 
