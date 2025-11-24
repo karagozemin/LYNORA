@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="Lynora-Photoroom.png" alt="LYNORA Logo" width="250" />
+  <img src="Lynora-Photoroom.png" alt="LYNORA Logo" width="240" />
 </div>
 
 # LYNORA - Real-Time Prediction Markets on Massa Chain
