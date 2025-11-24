@@ -384,7 +384,9 @@ export function useWallet() {
     const unsubscribe = walletManager.subscribe(setState);
     
     // Try to auto-reconnect on mount
-    walletManager.autoReconnect().finally(() => {
+    walletManager.autoReconnect().catch((error) => {
+      console.warn('Auto-reconnect failed (this is normal if wallet is not connected):', error);
+    }).finally(() => {
       setIsReconnecting(false);
     });
 

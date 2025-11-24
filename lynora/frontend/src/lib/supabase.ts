@@ -9,12 +9,47 @@ import { createClient } from '@supabase/supabase-js';
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  console.warn('Supabase URL or Anon Key not set. Database features will be disabled.');
+// Debug logging
+console.log('🔍 Supabase Configuration Check:');
+console.log('  SUPABASE_URL:', SUPABASE_URL ? `${SUPABASE_URL.substring(0, 30)}...` : 'NOT SET');
+console.log('  SUPABASE_ANON_KEY:', SUPABASE_ANON_KEY ? `${SUPABASE_ANON_KEY.substring(0, 30)}...` : 'NOT SET');
+console.log('  import.meta.env keys:', Object.keys(import.meta.env).filter(k => k.includes('SUPABASE')));
+
+export const isSupabaseConfigured = !!(SUPABASE_URL && SUPABASE_ANON_KEY && SUPABASE_URL.trim() && SUPABASE_ANON_KEY.trim());
+
+if (!isSupabaseConfigured) {
+  console.warn('⚠️ Supabase URL or Anon Key not set. Database features will be disabled.');
+  console.warn('   Make sure .env file exists in frontend/ directory and dev server is restarted.');
+} else {
+  console.log('✅ Supabase is configured and ready!');
 }
 
-// Create Supabase client
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Create Supabase client - always create one to prevent crashes
+// If not configured, use dummy values (functions will check isSupabaseConfigured before using)
+let supabaseInstance: ReturnType<typeof createClient>;
+
+try {
+  if (isSupabaseConfigured) {
+    supabaseInstance = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } else {
+    // Create a minimal client with dummy values to prevent crashes
+    // All functions check isSupabaseConfigured before using it
+    supabaseInstance = createClient(
+      'https://dummy.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR1bW15Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDUxOTIwMDAsImV4cCI6MTk2MDc2ODAwMH0.dummy'
+    );
+  }
+} catch (error) {
+  console.error('Failed to create Supabase client:', error);
+  // Create a minimal fallback client
+  supabaseInstance = createClient(
+    'https://dummy.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR1bW15Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDUxOTIwMDAsImV4cCI6MTk2MDc2ODAwMH0.dummy'
+  );
+}
+
+// Export the client (cast to any to avoid TypeScript errors when using dummy URL)
+export const supabase = supabaseInstance as any;
 
 // Database types
 export interface SupabaseMarket {
@@ -45,7 +80,7 @@ export interface SupabaseMarket {
  * Save market to Supabase
  */
 export async function saveMarketToSupabase(market: SupabaseMarket): Promise<void> {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  if (!isSupabaseConfigured) {
     console.warn('Supabase not configured, skipping database save');
     return;
   }
@@ -112,25 +147,38 @@ export async function saveMarketToSupabase(market: SupabaseMarket): Promise<void
  * Get all markets from Supabase
  */
 export async function getMarketsFromSupabase(): Promise<SupabaseMarket[]> {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  if (!isSupabaseConfigured) {
     console.warn('Supabase not configured, returning empty array');
     return [];
   }
 
   try {
+    console.log('📡 Fetching markets from Supabase...');
     const { data, error } = await supabase
       .from('markets')
       .select('*')
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Error fetching markets from Supabase:', error);
+      console.error('❌ Error fetching markets from Supabase:', error);
+      console.error('   Error details:', JSON.stringify(error, null, 2));
+      
+      // Check if it's a network/DNS error
+      if (error.message?.includes('Failed to fetch') || error.message?.includes('ERR_NAME_NOT_RESOLVED')) {
+        console.error('⚠️ Supabase URL cannot be reached. Possible reasons:');
+        console.error('   1. Supabase project may have been deleted');
+        console.error('   2. URL might be incorrect');
+        console.error('   3. Internet connection issue');
+        console.error('   Please check your Supabase dashboard: https://supabase.com/dashboard');
+      }
+      
       return [];
     }
 
+    console.log(`✅ Successfully fetched ${data?.length || 0} markets from Supabase`);
     return (data || []) as SupabaseMarket[];
   } catch (error) {
-    console.error('Failed to fetch markets from Supabase:', error);
+    console.error('❌ Failed to fetch markets from Supabase:', error);
     return [];
   }
 }
@@ -142,15 +190,19 @@ export async function updateMarketInSupabase(
   marketId: number,
   updates: Partial<SupabaseMarket>
 ): Promise<void> {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  if (!isSupabaseConfigured) {
     console.warn('Supabase not configured, skipping database update');
     return;
   }
 
   try {
+    if (!isSupabaseConfigured) {
+      return;
+    }
+    
     const { error } = await supabase
       .from('markets')
-      .update(updates)
+      .update(updates as any)
       .eq('market_id', marketId);
 
     if (error) {
@@ -182,8 +234,12 @@ export interface UserBet {
  * Save user bet to Supabase
  */
 export async function saveUserBet(bet: UserBet): Promise<void> {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  if (!isSupabaseConfigured) {
     console.warn('Supabase not configured, skipping user bet save');
+    return;
+  }
+
+  if (!isSupabaseConfigured) {
     return;
   }
 
@@ -198,7 +254,7 @@ export async function saveUserBet(bet: UserBet): Promise<void> {
         reward_amount: bet.reward_amount || '0',
         claimed: bet.claimed || false,
         created_at: bet.created_at,
-      }, {
+      } as any, {
         onConflict: 'market_id,user_address,option', // Update if exists
       });
 
@@ -218,7 +274,7 @@ export async function saveUserBet(bet: UserBet): Promise<void> {
  * Get user bets for a market
  */
 export async function getUserBetsForMarket(marketId: number, userAddress: string): Promise<UserBet[]> {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  if (!isSupabaseConfigured) {
     console.warn('Supabase not configured, returning empty array');
     return [];
   }
@@ -246,7 +302,7 @@ export async function getUserBetsForMarket(marketId: number, userAddress: string
  * Calculate and update rewards for winners when market is resolved
  */
 export async function calculateAndDistributeRewards(marketId: number, correctAnswer: string, maxReward: number = 10): Promise<void> {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  if (!isSupabaseConfigured) {
     console.warn('Supabase not configured, skipping reward calculation');
     return;
   }
@@ -271,7 +327,7 @@ export async function calculateAndDistributeRewards(marketId: number, correctAns
 
     // Calculate rewards: 2x bet amount, max maxReward MAS
     // bet.amount is in nanoMAS (string), convert to MAS first
-    const updates = winningBets.map(bet => {
+    const updates = winningBets.map((bet: any) => {
       const betAmountNano = BigInt(bet.amount);
       const betAmountMAS = Number(betAmountNano) / 1e9; // Convert nanoMAS to MAS
       const rewardAmountMAS = Math.min(betAmountMAS * 2, maxReward);
@@ -287,7 +343,7 @@ export async function calculateAndDistributeRewards(marketId: number, correctAns
     for (const update of updates) {
       const { error: updateError } = await supabase
         .from('user_bets')
-        .update({ reward_amount: update.reward_amount })
+        .update({ reward_amount: update.reward_amount } as any)
         .eq('id', update.id);
 
       if (updateError) {
@@ -306,7 +362,7 @@ export async function calculateAndDistributeRewards(marketId: number, correctAns
  * Claim reward for a user bet
  */
 export async function claimRewardForBet(betId: number): Promise<void> {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  if (!isSupabaseConfigured) {
     console.warn('Supabase not configured, skipping reward claim');
     return;
   }
@@ -314,7 +370,7 @@ export async function claimRewardForBet(betId: number): Promise<void> {
   try {
     const { error } = await supabase
       .from('user_bets')
-      .update({ claimed: true })
+      .update({ claimed: true } as any)
       .eq('id', betId);
 
     if (error) {
